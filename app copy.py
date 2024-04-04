@@ -1,12 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import tensorflow as tf
 import numpy as np
 import io
+from PIL import Image
+import base64
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 # Load the trained model
-model = tf.keras.models.load_model('C:\\Users\\akush\\Downloads\\Tyre\\model.h5')
+model = tf.keras.models.load_model('model.h5')
 
 # Define class names
 class_names = ['class_1', 'class_2', 'class_3']
@@ -27,15 +31,24 @@ def predict():
         img_bytes = file.read()
         
         # Convert the bytes into an image
-        img = tf.keras.preprocessing.image.load_img(io.BytesIO(img_bytes), target_size=(128, 128))
+        img = Image.open(io.BytesIO(img_bytes)).resize((128, 128))  # Resize the image to match model input size
+        
+        # Convert image to base64 string
+        img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+        
+        # Make prediction
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = tf.expand_dims(img_array, 0)  # Create batch axis
-
-        # Make prediction
         predictions = model.predict(img_array)
-        predicted_class = class_names[np.argmax(predictions)]
-
-        return render_template('result.html', prediction=predicted_class)
+        predicted_class_index = np.argmax(predictions)
+        predicted_class = class_names[predicted_class_index]
+        
+        # Get the actual class predicted by the model
+        actual_class_index = np.argmax(predictions)
+        actual_class = class_names[actual_class_index]
+        
+        # Pass the input image base64 string, actual class name, and predicted class name to the template
+        return render_template('result.html', input_image=img_base64, actual_class=actual_class, predicted_class=predicted_class)
 
 if __name__ == '__main__':
     app.run(debug=True)

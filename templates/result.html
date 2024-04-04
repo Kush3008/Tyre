@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f6ff; /* Light hue blue */
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff; /* White background */
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .image-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-image {
+            max-width: 100%; /* Limit image width to 100% of container */
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+            margin: 0 auto; /* Center image horizontally */
+            border-radius: 5px;
+        }
+        p {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+        .label {
+            font-weight: bold;
+        }
+        .predicted {
+            color: #007bff; /* Blue text for predicted class */
+        }
+        .actual {
+            color: #28a745; /* Green text for actual class */
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff; /* Blue link */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Result</h1>
+        <div class="image-container">
+            <p class="label">Input Image:</p>
+            <img class="result-image" src="data:image/jpeg;base64,{{ input_image }}" alt="Input Image">
+        </div>
+        <p class="label">Actual Class:</p>
+        <p class="actual">{{ actual_class }}</p>
+        <p class="label">Predicted Class:</p>
+        <p class="predicted">{{ predicted_class }}</p>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+</html>
